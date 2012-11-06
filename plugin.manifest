@@ -1,0 +1,6 @@
+pluginname=Raumbelegungen
+pluginclassname=raumbelegungen
+origin=neo
+version=1.7.2
+description=Zeigt die Raumbelegungen eines bestimmten Zeitraums an.
+studipMinVersion=2.1

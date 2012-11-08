@@ -40,7 +40,7 @@ class raumbelegung {
      * Gibt alle Gebaude aus
      * @parm string $id uber die ID kann gefiltert werden bzw. ein Name zu einem Gebaeude ausgegeben werden
      */
-    private function getGebaeude($id = "") {
+    public function getGebaeude($id = "") {
         $db = DBManager::get();
         if($id == "") {
         $gebaude = $db->query("SELECT Name, resource_id

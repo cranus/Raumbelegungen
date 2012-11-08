@@ -80,14 +80,8 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
     
 
     private function getTermine($von, $bis, $gebaude) {
-  
-        print_r(array(
-            "von" => $von,
-            "bis" => $bis,
-            
-        ));
 	$termine = array();
-	for($i = 0; $von < $bis AND $i < 3;$i++) {                                        //date("j",$von_durch) < date("j",$bis)
+	for($i = 0; $von < $bis AND $i < 100;$i++) {                                        //date("j",$von_durch) < date("j",$bis)
             $dates = new dates($von, $gebaude);
 
             $tempdates = $dates->getDates();
@@ -95,7 +89,7 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
             $tempdates[]["lauf"] = $i;
             $termine = array_merge($termine, $tempdates);
             //ein Tag vor
-            $von_durch = $von_durch + $dates->daysec + 1;
+            $von = $von + $dates->daysec + 1;
         }
 
         $vorlesungen = array();
@@ -126,35 +120,30 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
     }
 
     public function print_action() {
-        $gebaude = $this->raumbelegung->getGebaeude();
-        $template = $this->getTemplate("start.php");
-        $template->set_attribute('gebaude', $gebaude);
         $auswahlgeb = Request::option('gebaude');
         $auswahl["gebaude"] = Request::option('gebaude');
         $auswahl["von"] = $_GET["von"];
-        if(!isset($auswahl["von"])) $auswahl["von"] = "00.00.0000";
         $auswahl["bis"] = $_GET["bis"];
-         if(!isset($auswahl["bis"])) $auswahl["bis"] = "00.00.0000";
-        $auswahl .= $this->getNextWeekEnd();
-         $template->set_attribute('auswahl', $auswahl);
+
 
         if(isset($auswahlgeb)) {
-            //echo $auswahlgeb;
-            if(isset($_GET["von"]) AND $_GET["von"] != "00.00.0000") $von = $this->dateToUnix($_GET["von"]);
+            if(isset($_GET["von"]) AND $_GET["von"] != "00.00.0000") $von = raumbelegung::dateToUnix($_GET["von"]);
             else $von = time();
-            if(isset($_GET["bis"]) AND $_GET["bis"] != "00.00.0000") $bis =  $this->dateToUnix($_GET["bis"],"24");
+            if(isset($_GET["bis"]) AND $_GET["bis"] != "00.00.0000") $bis =  raumbelegung::dateToUnix($_GET["bis"],"24");
             else $bis = $von;
             $termine = $this->getTermine($von, $bis, $auswahlgeb);
-            $ausgabe = "<h2>Raumbuchungen von ".$_GET["von"]." bis ".$_GET["bis"]." f&uumlr das Geb&auml;ude: ".$this->getGebaeude($auswahlgeb)."</h2>";
+            $ausgabe = "<h2>Raumbuchungen von ".$_GET["von"]." bis ".$_GET["bis"]." f&uumlr das Geb&auml;ude: ".raumbelegung::getGebaeude($auswahlgeb)."</h2>";
             $ausgabe .= " <table border='1'>
                           <tr> <td> Von <td> Bis <td> Raum <td> Vorlesungstitel <td> Dozent </tr>
                           <tbody>";
             foreach($termine as $termin) {
                $ausgabe .= "<tr>
                             <td>".$termin["von"]."<td>".$termin["bis"]."<td>".$termin["raum"]."<td>".$termin["titel"]."<td>";
-               foreach($termin["Dozent"] as $dozent) {
-                   $ausgabe .= $dozent["title_front"]." ".$dozent["vorname"]." ".$dozent["nachname"];
-               }
+               if(is_array($termin["Dozent"])) {
+                    foreach($termin["Dozent"] as $dozent) {
+                        $ausgabe .= $dozent["title_front"]." ".$dozent["vorname"]." ".$dozent["nachname"];
+                    }
+               } else $ausgabe .= "&nbsp;";
                $ausgabe .=  "</tr>";
             }
             $ausgabe .= " </table>";
@@ -166,22 +155,21 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
     public function pdf_action(){
         $auswahlgeb = Request::option('gebaude');
         if(isset($auswahlgeb)) {
-            //echo $auswahlgeb;
             $doc = new ExportPDF();
             $doc->addPage();
 
-            if(isset($_GET["von"]) AND $_GET["von"] != "00.00.0000") $von = $this->dateToUnix($_GET["von"]);
+            if(isset($_GET["von"]) AND $_GET["von"] != "00.00.0000") $von = raumbelegung::dateToUnix($_GET["von"]);
             else $von = time();
-            if(isset($_GET["bis"]) AND $_GET["bis"] != "00.00.0000") $bis =  $this->dateToUnix($_GET["bis"],"24");
+            if(isset($_GET["bis"]) AND $_GET["bis"] != "00.00.0000") $bis =  raumbelegung::dateToUnix($_GET["bis"],"24");
             else $bis = $von;
             if($_GET["nextwe"] == "1") {
-                $we = $this->getNextWeekEnd();
-                $von = $this->dateToUnix($we["wevon"]);
-                $bis = $this->dateToUnix($we["webis"]);
+                $we = raumbelegung::getNextWeekEnd();
+                $von = raumbelegung::dateToUnix($we["wevon"]);
+                $bis = raumbelegung::dateToUnix($we["webis"]);
             }
             $termine = $this->getTermine($von, $bis, $auswahlgeb);
             $doc->SetFont('arial', '', 12, '', true);
-            $doc->addContent("Raumbuchungen von ".$_GET["von"]." bis ".$_GET["bis"]." f�r das Geb�ude: ".$this->getGebaeude($auswahlgeb));
+            $doc->addContent("Raumbuchungen von ".$_GET["von"]." bis ".$_GET["bis"]." f&uumlr das Geb&auml;ude: ".raumbelegung::getGebaeude($auswahlgeb));
             $doc->SetFont('arial', '', 8, '', true);
             $i = 0;
             foreach($termine as $termin) {
@@ -191,8 +179,10 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
                     }
 
                     $content = $termin["von"]." - ".$termin["bis"]." - ".$termin["raum"]." - ".$termin["titel"]." - ";
-                    foreach($termin["Dozent"] as $dozent) {
-                        $content .= $dozent["title_front"]." ".$dozent["vorname"]." ".$dozent["nachname"];
+                    if(is_array($termin["Dozent"])) {
+                        foreach($termin["Dozent"] as $dozent) {
+                            $content .= $dozent["title_front"]." ".$dozent["vorname"]." ".$dozent["nachname"];
+                        }
                     }
                     $doc->SetFont('arial', '', 8, '', true);
                     $doc->addContent($content);
@@ -203,7 +193,7 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
                     $i++;
                 }
             }
-            $doc->dispatch($this->getGebaeude($auswahlgeb)."-".$von."-".$bis);
+            $doc->dispatch(raumbelegung::getGebaeude($auswahlgeb)."-".$von."-".$bis);
         }
     }
 

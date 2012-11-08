@@ -30,9 +30,9 @@ Bis: <br>
 </div>
     <div id="raumbelegungen_ergebnis">
     <img alt="Print" src="/assets/images/icons/16/black/print.png">
-        <a href="print?gebaude=<?= $auswahl["gebaude"] ?>&von=<?= $auswahl["von"] ?>&bis=<?= $auswahl["bis"] ?>" target="_blank">Druckansicht</a>
+        <a href="print?gebaude=<?= $auswahl["gebaeude"] ?>&von=<?= $auswahl["von"] ?>&bis=<?= $auswahl["bis"] ?>" target="_blank">Druckansicht</a>
     <img alt="Print" src="/assets/images/icons/16/black/print.png">
-        <a href="pdf?gebaude=<?= $auswahl["gebaude"] ?>&von=<?= $auswahl["von"] ?>&bis=<?= $auswahl["bis"] ?>" target="_blank">Als PDF</a>
+        <a href="pdf?gebaude=<?= $auswahl["gebaeude"] ?>&von=<?= $auswahl["von"] ?>&bis=<?= $auswahl["bis"] ?>" target="_blank">Als PDF</a>
 
  <table border="0" id="termine">
   <tr> <td> Von <td> Bis <td> Raum <td> Vorlesungstitel <td> Dozent </tr>

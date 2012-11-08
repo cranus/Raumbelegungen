@@ -37,6 +37,7 @@ Bis: <br>
  <table border="0" id="termine">
   <tr> <td> Von <td> Bis <td> Raum <td> Vorlesungstitel <td> Dozent </tr>
   <tbody>
+      <? IF(!empty($termine[0])) : ?>
   <? foreach ($termine as $termin) : ?>
     <tr id="termin">
         <td><?=  $termin["von"] ?><td> <?=  $termin["bis"] ?> <td> <?=  $termin["raum"] ?> <td> <?=  $termin["titel"] ?> <td> <? foreach ($termin["Dozent"]  as $dozenten) : ?><?= $dozenten["title_front"]  ?> <?= $dozenten["vorname"]  ?> <?= $dozenten["nachname"]  ?> <br /><? endforeach ?>
@@ -44,6 +45,7 @@ Bis: <br>
 
      </tr>
  <? endforeach ?>
+     <? ENDIF ?>
  </table>
 </div>
 

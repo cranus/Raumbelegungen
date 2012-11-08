@@ -35,11 +35,11 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
         //CSS Datei hinzufügen
         PageLayout::addStylesheet($this->getPluginURL() . '/assets/css/raumbelegung.css');
         //Sammeln der Informationen die Auf der Startseite benoetigt werden
-        $gebaude = $this->raumbelegung->getGebaeude();
+        //$startdata = $this->raumbelegung->getStart();
         $template = $this->getTemplate("start.php");
         
-       $start = $this->raumbelegung->start();
-       $template->set_attribute('gebaude', $start["gebaude"]);
+       $start = $this->raumbelegung->getStart();
+       $template->set_attribute('gebaude', $start["gebaeude"]);
 
         // Was macht das hier$wochenende = $this->getNextWeekEnd();
 
@@ -48,14 +48,15 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
 
         $template->set_attribute('auswahl', $start["auswahl"]);
 
-        if(isset($auswahlgeb)) {
+        if(isset($_REQUEST["gebaude"])) {
             //echo $auswahlgeb;
-            if(isset($_GET["von"]) AND $_GET["von"] != "00.00.0000") $von = $this->dateToUnix($_GET["von"]);
+            if(isset($_REQUEST["von"]) AND $_REQUEST["von"] != "00.00.0000") $von = $this->raumbelegung->dateToUnix($_GET["von"]);
             else $von = time();
-            if(isset($_GET["bis"]) AND $_GET["bis"] != "00.00.0000") $bis =  $this->dateToUnix($_GET["bis"],"24");
+            if(isset($_REQUEST["bis"]) AND $_REQUEST["bis"] != "00.00.0000") $bis =  $this->raumbelegung->dateToUnix($_GET["bis"],"24");
             else $bis = $von;
             $termine = $this->getTermine($von, $bis, $auswahlgeb);
             $template->set_attribute('termine', $termine);
+            print_r($termine);
 
         } else {
 		$template->set_attribute('termine', "");

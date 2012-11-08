@@ -23,13 +23,13 @@ class raumbelegung {
         if(!isset($_REQUEST['von'])) { //Falls nicht dann Aktuelle Tag
             $return["auswahl"]["von"] = date("d.m.Y");
         } else { //Falls ja dann diesen Wert eintragen
-            $return["auswahl"]["von"] = Request::option('von');
+            $return["auswahl"]["von"] = $_REQUEST['von'];
         }
         //Ueberpruefen ob ein bis Tag uebergeben wurde
         if(!isset($_REQUEST['bis'])) { //Falls nicht dann Aktuelle Tag
             $return["auswahl"]["bis"] = date("d.m.Y");
         } else {//Falls ja dann diesen Wert eintragen
-            $return["auswahl"]["bis"] = Request::option('bis');
+            $return["auswahl"]["bis"] = $_REQUEST['bis'];
         }
         
         return $return;
@@ -60,7 +60,7 @@ class raumbelegung {
      * @parm string $datum  Datum im Form von tt.mm.YYYY
      * @parm string $stunde Falls der Timestamp nicht in der Stunde 1 anfangen soll sondern in einer anderen Stunde kann das hier manipuliert werden
      */
-    private function dateToUnix($datum, $stunde="1"){
+    public function dateToUnix($datum, $stunde="1"){
         $tag = $datum[0].$datum[1];
         $monat = $datum[3].$datum[4];
         $jahr = $datum[6].$datum[7].$datum[8].$datum[9];
@@ -108,7 +108,7 @@ class raumbelegung {
      * @perm string $engName    Englische Abkuerzung
      * @return string $return   Deutsche Abkuerzung
      */
-    protected function deutscherTag($engName) {
+    public function deutscherTag($engName) {
         switch($engName) {
             case 'Mon': return "Mo" ;break;
             case 'Tue': return "Di" ;break;

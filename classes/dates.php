@@ -6,7 +6,7 @@
  * Time: 09:09
  * To change this template use File | Settings | File Templates.
  */
-class days
+class dates
 {
     private $building, $day;
     private $dates = array();

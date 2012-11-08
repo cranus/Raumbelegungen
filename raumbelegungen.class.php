@@ -7,7 +7,7 @@
  */
 
 require_once($GLOBALS['STUDIP_BASE_PATH']."/lib/classes/exportdocument/ExportPDF.class.php");
-require_once(dirname(__FILE__)."/classes/days.php");
+require_once(dirname(__FILE__)."/classes/dates.php");
 require_once(dirname(__FILE__)."/classes/raumbelegung.php");
 
 class raumbelegungen extends StudIPPlugin implements SystemPlugin {
@@ -43,8 +43,8 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
 
         // Was macht das hier$wochenende = $this->getNextWeekEnd();
 
-        $auswahl["wevon"] = $wochenende["wevon"];
-        $auswahl["webis"] = $wochenende["webis"];
+        //$auswahl["wevon"] = $wochenende["wevon"];
+        //$auswahl["webis"] = $wochenende["webis"];
 
         $template->set_attribute('auswahl', $start["auswahl"]);
 
@@ -52,7 +52,10 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
             //echo $auswahlgeb;
             if(isset($_REQUEST["von"]) AND $_REQUEST["von"] != "00.00.0000") $von = $this->raumbelegung->dateToUnix($_GET["von"]);
             else $von = time();
-            if(isset($_REQUEST["bis"]) AND $_REQUEST["bis"] != "00.00.0000") $bis =  $this->raumbelegung->dateToUnix($_GET["bis"],"24");
+            if(isset($_REQUEST["bis"]) AND $_REQUEST["bis"] != "00.00.0000") {
+                if($_REQUEST["bis"] != $_REQUEST["von"]) $bis = $this->raumbelegung->dateToUnix($_REQUEST["bis"],"24");
+                else $bis = $this->raumbelegung->dateToUnix($_REQUEST["bis"],"22"); // Wenn gleicher Tag dann nur bis 22Uhr
+            }
             else $bis = $von;
             $termine = $this->getTermine($von, $bis, $auswahlgeb);
             $template->set_attribute('termine', $termine);
@@ -85,11 +88,15 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
     
 
     private function getTermine($von, $bis, $gebaude) {
-        $von_durch = $von + 1;
-        $bis = $bis - 1;
+  
+        print_r(array(
+            "von" => $von,
+            "bis" => $bis,
+            
+        ));
 	$termine = array();
-	for($i = 0; $von_durch < $bis AND $i < 3;$i++) {                                        //date("j",$von_durch) < date("j",$bis)
-            $dates = new days($von_durch, $gebaude);
+	for($i = 0; $von < $bis AND $i < 3;$i++) {                                        //date("j",$von_durch) < date("j",$bis)
+            $dates = new dates($von, $gebaude);
 
             $tempdates = $dates->getDates();
             //$dates->debug($dates->getDates());

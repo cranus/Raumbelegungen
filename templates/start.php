@@ -6,7 +6,7 @@
  <select id="gebaude" name="gebaude" onchange="">
 
     <? foreach ($gebaude as $gebaud) : ?>
-     <option value="<?= $gebaud["resource_id"] ?>" <? if($gebaud["resource_id"] == $auswahl["gebaude"]) : ?> selected <? endif ?> > <?= $gebaud["Name"] ?> </option>
+     <option value="<?= $gebaud["resource_id"] ?>" <? if($gebaud["resource_id"] == $auswahl["gebaeude"]) : ?> selected <? endif ?> > <?= $gebaud["Name"] ?> </option>
     <? endforeach ?>
  </select>
 
@@ -40,7 +40,7 @@ Bis: <br>
       <? IF(!empty($termine[0])) : ?>
   <? foreach ($termine as $termin) : ?>
     <tr id="termin">
-        <td><?=  $termin["von"] ?><td> <?=  $termin["bis"] ?> <td> <?=  $termin["raum"] ?> <td> <?=  $termin["titel"] ?> <td> <? foreach ($termin["Dozent"]  as $dozenten) : ?><?= $dozenten["title_front"]  ?> <?= $dozenten["vorname"]  ?> <?= $dozenten["nachname"]  ?> <br /><? endforeach ?>
+        <td><?=  $termin["von"] ?><td> <?=  $termin["bis"] ?> <td> <?=  $termin["raum"] ?> <td> <?=  $termin["titel"] ?> <td> <? IF(is_array($termin["Dozent"][0])): ?> <? foreach ($termin["Dozent"]  as $dozenten) : ?><?= $dozenten["title_front"]  ?> <?= $dozenten["vorname"]  ?> <?= $dozenten["nachname"]  ?> <br /><? endforeach ?> <? endif ?>
 
 
      </tr>

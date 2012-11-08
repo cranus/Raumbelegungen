@@ -29,10 +29,13 @@ $(document).ready(function(){
     });
     $('#raumbelegungen_buttonwochenende').button({ })
         .click(function(){
-            $.getJSON('/plugins_packages/neo/raumbelegungen/ajax.php', {id: 'we'},function(data){
+            $.getJSON('/neo/plugins_packages/neo/raumbelegungen/ajax.php', {id: 'we'},function(data){
                   $('#raumbelegungen_bis').val(data.bis);
                   $('#raumbelegungen_von').val(data.von);
             });
 
         });
+        
+        $('#raumbelegungen_bis').datepicker();
+        $('#raumbelegungen_von').datepicker();
 });

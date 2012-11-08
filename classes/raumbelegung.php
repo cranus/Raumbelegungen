@@ -16,8 +16,8 @@ class raumbelegung {
         $return = array();
         $return["gebaeude"] = $this->getGebaeude();
         //Ueberpruefen ob eine Gebaeude ID uebergeben wurde
-        if(isset($_REQUEST['gebaeude'])) {
-            $return["auswahl"]["gebaeude"] = Request::option('gebaeude');
+        if(isset($_REQUEST['gebaude'])) {
+            $return["auswahl"]["gebaeude"] = $_REQUEST['gebaude'];
         }
         //Ueberpruefen ob ein Von Tag uebergeben wurde
         if(!isset($_REQUEST['von'])) { //Falls nicht dann Aktuelle Tag
@@ -72,7 +72,7 @@ class raumbelegung {
      * @parm string $id ID des Seminars
      * @return  array $dozenten mit title_front, vorname, nachname
      */
-    private function getDozent($id){
+    public function getDozent($id){
         if(isset($id)) {
             $db = DBManager::get();
             $sql = "SELECT user_info.title_front ,auth_user_md5.vorname, auth_user_md5.nachname
@@ -91,7 +91,7 @@ class raumbelegung {
      * @parm string $id ID 
      * @return string   $vlinfos Name der Vorlesung 
      */
-    private function getTitel($id) {
+    public function getTitel($id) {
        $db = DBManager::get();
        $sql = "SELECT seminare.Name, seminare.Seminar_id
                FROM seminare

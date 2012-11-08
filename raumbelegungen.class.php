@@ -35,16 +35,10 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
         //CSS Datei hinzufügen
         PageLayout::addStylesheet($this->getPluginURL() . '/assets/css/raumbelegung.css');
         //Sammeln der Informationen die Auf der Startseite benoetigt werden
-        //$startdata = $this->raumbelegung->getStart();
         $template = $this->getTemplate("start.php");
         
        $start = $this->raumbelegung->getStart();
        $template->set_attribute('gebaude', $start["gebaeude"]);
-
-        // Was macht das hier$wochenende = $this->getNextWeekEnd();
-
-        //$auswahl["wevon"] = $wochenende["wevon"];
-        //$auswahl["webis"] = $wochenende["webis"];
 
         $template->set_attribute('auswahl', $start["auswahl"]);
 
@@ -57,10 +51,8 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
                 else $bis = $this->raumbelegung->dateToUnix($_REQUEST["bis"],"22"); // Wenn gleicher Tag dann nur bis 22Uhr
             }
             else $bis = $von;
-            $termine = $this->getTermine($von, $bis, $auswahlgeb);
+            $termine = $this->getTermine($von, $bis, $start["auswahl"]["gebaeude"]);
             $template->set_attribute('termine', $termine);
-            print_r($termine);
-
         } else {
 		$template->set_attribute('termine', "");
 	}
@@ -117,9 +109,9 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
                 $vorlesungen[$i]["bis"] = "(".$this->raumbelegung->deutscherTag(date('D', $termin["end"])).") ".date("d.m.y - H:i",$termin["end"]);
                 $vorlesungen[$i]["raum"] = $termin["Raum"];
                 if($termin["titel"] == "") {
-                    $vlinfos = $this->getTitel($termin["id"]);
+                    $vlinfos = raumbelegung::getTitel($termin["id"]);
                     $vorlesungen[$i]["titel"] = $vlinfos["Name"];
-                    $vorlesungen[$i]["Dozent"] = $this->getDozent($vlinfos["Seminar_id"]);
+                    $vorlesungen[$i]["Dozent"] = raumbelegung::getDozent($vlinfos["Seminar_id"]);
                 }
                 else {
                     if($termin["begin"] != $termin["repeat_end"] AND !empty($termin["repeat_end"])) $vorlesungen[$i]["titel"] = $termin["titel"]." (Regelm&auml;ssiger Termin bis zum "."(".$this->raumbelegung->deutscherTag(date('D', $termin["repeat_end"])).") ".date("d.m.y",$termin["repeat_end"]).")";
@@ -132,11 +124,6 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
 	    }
         return $vorlesungen;
     }
-
-    private function getDatesForDay () {
-
-    }
-
 
     public function print_action() {
         $gebaude = $this->raumbelegung->getGebaeude();

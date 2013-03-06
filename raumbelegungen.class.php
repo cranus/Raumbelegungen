@@ -22,9 +22,17 @@ class raumbelegungen extends StudIPPlugin implements SystemPlugin {
 
         //Navigationselement AutoNavigation 
         $navigation = new AutoNavigation($this->getDisplayName(), PluginEngine::getURL($this, array(), "show"));
-        $tools = new AutoNavigation("Tools", PluginEngine::getURL($this, array(), "start"));
+        $tabelleNav =  new AutoNavigation("tabellarische Ansicht", PluginEngine::getURL($this, array(), "show"));
+        $grafNav =  new AutoNavigation("grafische Ansicht", PluginEngine::getURL($this, array(), "show"));
         //Punkt an dem das Elements eingesetzt werden soll
         Navigation::addItem('/start/Raumbelgungen/', clone $navigation);
+        Navigation::addItem('/start/Raumbelgungen/tab', clone $tabelleNav);
+        Navigation::addItem('/start/Raumbelgungen/graf', clone $grafNav);
+         Navigation::addItem('/Raumbelgungen/', clone $navigation);
+        Navigation::addItem('/Raumbelgungen/tab', clone $tabelleNav);
+        Navigation::addItem('/Raumbelgungen/graf', clone $grafNav);
+          
+        
     }
     /*
      * Standard Funktion beim Aufruf des Plugins

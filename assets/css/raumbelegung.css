@@ -1,18 +1,10 @@
 #raumbelegungen_edit {
     background-color: #dee2e8;
-    float: left;
-    width: 500px;
-    padding-left: 10px;
-    padding-bottom: 10px;
-}
-
-#raumbelegungen_edit form {
-    padding-left: 10px;
+    padding: 10px;
 }
 
 #raumbelegungen_ergebnis {
     float: left;
-
 }
 
 #raumbelegungen_hilfe {
@@ -27,4 +19,8 @@
 .raumbelegungen_hilfe_antwort {
     font-size: 12px;
     padding-bottom: 10px;
+}
+
+#raumbelegungen_print {
+    padding: 10px;
 }

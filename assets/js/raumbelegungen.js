@@ -6,9 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 $(document).ready(function(){
-    $('#termine tr:odd').css('background-color','#FFFFF');
-    $('#termine tr:even').css('background-color','#fcf4e9');
-    $('#termine tr:first').css('background-color','#f3ae00');
     $('#raumbelegungen_anzeigen').button()
     .click(function(){
             $('#raumbelegungen_formular').submit();

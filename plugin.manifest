@@ -1,6 +1,7 @@
 pluginname=Raumbelegungen
 pluginclassname=raumbelegungen
 origin=neo
-version=1.9
+version=1.9.2
 description=Zeigt die Raumbelegungen eines bestimmten Zeitraums an.
-studipMinVersion=2.1
+studipMinVersion=3.0
+studipMaxVersion=3.3.99
